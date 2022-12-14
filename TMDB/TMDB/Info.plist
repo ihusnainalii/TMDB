@@ -25,5 +25,7 @@
 	<string>$(API_BASE_URL)</string>
 	<key>ApiKey</key>
 	<string>$(API_KEY)</string>
+	<key>ImageBasePath</key>
+	<string>$(IMAGE_BASE_PATH)</string>
 </dict>
 </plist>
