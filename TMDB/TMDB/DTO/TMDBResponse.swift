@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import RealmSwift
 
-struct TMDBResponse : Codable {
+class TMDBResponse: Object, Codable {
     
-	let page : Int?
-	let results : [Movie]?
-	let totalPages : Int?
-	let totalResults : Int?
+	@Persisted var page : Int?
+	@Persisted var results: List<Movie>
+	@Persisted var totalPages : Int?
+	@Persisted var totalResults : Int?
 
 	enum CodingKeys: String, CodingKey {
 
@@ -21,11 +22,13 @@ struct TMDBResponse : Codable {
 		case totalPages = "total_pages"
 		case totalResults = "total_results"
 	}
+    
+    override init() {}
 
-	init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
 		page = try values.decodeIfPresent(Int.self, forKey: .page)
-		results = try values.decodeIfPresent([Movie].self, forKey: .results)
+        results = try values.decodeIfPresent(List<Movie>.self, forKey: .results) ?? List<Movie>()
         totalPages = try values.decodeIfPresent(Int.self, forKey: .totalPages)
         totalResults = try values.decodeIfPresent(Int.self, forKey: .totalResults)
 	}

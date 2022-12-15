@@ -38,4 +38,9 @@ extension UICollectionView {
         self.backgroundColor = .clear
         self.backgroundView = UIView(frame: .zero)
     }
+    
+    func clearSideBars() {
+        self.showsVerticalScrollIndicator = false
+        self.showsHorizontalScrollIndicator = false
+    }
 }

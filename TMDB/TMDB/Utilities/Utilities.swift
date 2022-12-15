@@ -17,7 +17,7 @@ struct Utilities {
     
     // MARK: - Images
     struct Assets {
-        static let Placeholderimg = UIImage(systemName: "heart.fill")
+        static let Placeholderimg = UIImage(systemName: "placeholder")
         static let Favorite = UIImage(systemName: "heart.fill")
         static let Unfavorite = UIImage(systemName: "heart")
     }

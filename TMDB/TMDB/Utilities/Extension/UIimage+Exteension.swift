@@ -21,7 +21,6 @@ extension UIImageView {
     func setImage(_ url: String) {
         self.kf.indicatorType = .activity
         let pathString = AppConfiguration().imageBasePath + url
-        print("Loading Image.... \(pathString)")
         self.kf.setImage(with: URL(string: pathString), placeholder: Utilities.Assets.Placeholderimg)
     }
     

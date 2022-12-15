@@ -6,6 +6,9 @@ target 'TMDB' do
   use_frameworks!
 
   # Pods for TMDB
+  # Pod for IQ Keyboard Manager Swift
+  pod 'IQKeyboardManagerSwift'
+  
   # Pod for Reactive Programming
   pod 'RxSwift'
   pod 'RxCocoa'
@@ -21,6 +24,9 @@ target 'TMDB' do
   
   # Pod for images
   pod 'Kingfisher'
+  
+  # Pod for local DB
+  # pod 'RealmSwift'
 
   target 'TMDBTests' do
     inherit! :search_paths

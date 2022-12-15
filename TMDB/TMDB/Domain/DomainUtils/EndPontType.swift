@@ -1,8 +1,8 @@
 //
 //  EndPontType.swift
-//  NYTimee
+//  TMDB
 //
-//  Created by devadmin on 02/11/2022.
+//  Created by devadmin on 14/12/2022.
 //
 
 import Foundation

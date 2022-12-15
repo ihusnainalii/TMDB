@@ -25,5 +25,6 @@ enum Result<T, E: Error> {
 enum ErrorResult: Error {
     case network(string: String)
     case parser(string: String)
+    case db(string: String)
     case custom(string: String)
 }
