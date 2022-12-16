@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     
     // MARK: - Constant
     let disposeBag = DisposeBag()
+    let refreshControl = UIRefreshControl()
     lazy var viewModel: MoviesViewModel = {
         let viewModel = MoviesViewModel(MoviesRepository())
         return viewModel
@@ -87,17 +88,37 @@ class ViewController: UIViewController {
         viewModel.fetchMovies()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        print("View appear")
-    }
-    
     // MARK: - IBActions
     @objc func searchTapped() {
         print("Search Tapped")
+        if let view = self.storyboard?.instantiateViewController(withIdentifier: "SearchViewController") as? SearchViewController {
+            self.navigationController?.pushViewController(view, animated: true)
+        }
+    }
+    
+    @objc func refresh() {
+        refreshControl.endRefreshing()
+        Database.shared.deleteAll(deleteObjClass: Movie.self) { realmResponse in
+            switch realmResponse {
+            case .success:
+                print("Local Movie data deleted")
+            case .failure(let error):
+                print("Local Movie data not deleted with error: \(error)")
+            }
+        }
+        MonitorNetwork().Connection(observe: false) { connection in
+            if let isConnected = connection, isConnected {
+                self.viewModel.pagination.accept(Pagination())
+                self.viewModel.fetchMovies()
+            }
+        }
     }
     
     @objc func favoriteTapped() {
-        viewModel.fetchFavorites()
+        if let view = self.storyboard?.instantiateViewController(withIdentifier: "FavoriteViewController") as? FavoriteViewController {
+            view.delegate = self
+            self.navigationController?.pushViewController(view, animated: true)
+        }
     }
     
     // MARK: - Custom Functions
@@ -105,12 +126,17 @@ class ViewController: UIViewController {
         collectionView.updateFLow(5, 5, false)
         collectionView.clearBackground()
         collectionView.clearSideBars()
+        
+        refreshControl.tintColor = .black
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        collectionView.addSubview(refreshControl)
+        collectionView.alwaysBounceVertical = true
     }
     
     private func subscribeRelay() {
         viewModel.movies.observe(on: MainScheduler.instance).subscribe (
             onNext: { data in
-                print(data)
+                // print(data)
             }
         ).disposed(by: disposeBag)
     }
@@ -124,23 +150,29 @@ class ViewController: UIViewController {
             .bind(to: self.view.rx.isShowHUD)
             .disposed(by: disposeBag)
         
-        // success
-        viewModel.isSuccess
-            .asObservable()
-            .filter { $0 }.bind { success in
-                if success {
-                    if let view = self.storyboard?.instantiateViewController(withIdentifier: "FavoriteViewController") as? FavoriteViewController {
-                        view.viewModel = FavoriteMoviesViewModel(MoviesRepository(), self.viewModel.favorites.value)
-                        self.navigationController?.pushViewController(view, animated: true)
-                    }
-                }
-            }.disposed(by: disposeBag)
-        
         viewModel.message.drive(onNext: {(_message) in
             if let message = _message {
-                print(message)
+                self.showAlert(message)
             }
         }).disposed(by: disposeBag)
+    }
+    
+    private func showAlert(_ message: String) {
+        let alert = UIAlertController(title: "TMDB", message: message, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+}
+
+extension ViewController: FavoriteMoviesDelegate {
+    func updateMovie(_ movie: Movie) {
+        let movies = viewModel.movies.value
+        if let index = movies.firstIndex(where: { viewModel in
+            viewModel.movie.value?.id == movie.id
+        }) {
+            movies[index].movie.accept(movie)
+        }
+        viewModel.movies.accept(movies)
     }
 }
 
@@ -152,6 +184,20 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
                 print("Favorite tapped")
             }
         }.disposed(by: disposeBag)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row == viewModel.movies.value.count - 1 {
+            if let pageNumber = viewModel.pagination.value.page, let totalPages = viewModel.pagination.value.totalPages, pageNumber <= totalPages {
+                MonitorNetwork().Connection(observe: false) { connection in
+                    if let isConnected = connection, isConnected {
+                        DispatchQueue.main.async {
+                            self.viewModel.fetchMovies()
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -21,7 +21,7 @@ final class AppConfiguration {
         guard let key = Bundle.main.object(forInfoDictionaryKey: "ApiKey") as? String else {
             fatalError("ApiKey must not be empty in plist")
         }
-        return "?api_key=\(key)"
+        return key
     }()
     
     lazy var imageBasePath: String = {

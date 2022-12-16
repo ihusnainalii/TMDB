@@ -9,13 +9,21 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+protocol FavoriteMoviesDelegate {
+    func updateMovie(_ movie: Movie)
+}
+
 class FavoriteViewController: UIViewController {
     
     // MARK: - IBOutlets
     @IBOutlet weak var collectionView: UICollectionView!
     
     // MARK: - Variables
-    var viewModel: FavoriteMoviesViewModel?
+    var delegate: FavoriteMoviesDelegate?
+    lazy var viewModel: FavoriteMoviesViewModel = {
+        let viewModel = FavoriteMoviesViewModel(MoviesRepository())
+        return viewModel
+    }()
     
     // MARK: - Constant
     let disposeBag = DisposeBag()
@@ -36,6 +44,9 @@ class FavoriteViewController: UIViewController {
         
         /// Subscribe Reply
         configureServiceCallBacks()
+        
+        // get data
+        viewModel.fetchFavorites()
     }
     
     // MARK: - IBActions
@@ -50,8 +61,6 @@ class FavoriteViewController: UIViewController {
     /// Displays HUD from API called to main View , a succes observable  for API here we perform action based on success/failure
     /// Message from response or set in viewModel
     private func configureServiceCallBacks() {
-        
-        guard let viewModel = viewModel else {return}
         
         // loading
         viewModel.isLoading
@@ -68,12 +77,14 @@ class FavoriteViewController: UIViewController {
 
 extension FavoriteViewController: UICollectionViewDelegateFlowLayout {
     func bindGridView() {
-        guard let viewModel = viewModel else {return}
         viewModel.movies.bind(to: collectionView.rx.items(cellIdentifier: HomeCellView.identifier, cellType: HomeCellView.self)) { row, movie, cell in
             cell.movieCellVM = movie
             cell.watchForClickHandler {
                 print("Favorite tapped")
-                viewModel.movies.remove(at: row)
+                self.viewModel.movies.remove(at: row)
+                if let movieData =  cell.movieCellVM?.movie.value {
+                    self.delegate?.updateMovie(movieData)
+                }
             }
         }.disposed(by: disposeBag)
     }

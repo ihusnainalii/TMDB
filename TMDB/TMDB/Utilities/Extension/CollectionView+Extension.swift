@@ -44,3 +44,17 @@ extension UICollectionView {
         self.showsHorizontalScrollIndicator = false
     }
 }
+
+extension UITableView {
+    
+    func update() {
+        self.separatorStyle = .singleLine
+        self.separatorColor = .lightText
+        self.tableFooterView = UIView(frame: .zero)
+        self.backgroundColor = .clear
+    }
+    
+    func register(_ identifier: String) {
+        self.register(UINib(nibName: identifier, bundle: nil), forCellReuseIdentifier: identifier)
+    }
+}

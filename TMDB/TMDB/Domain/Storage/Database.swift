@@ -25,7 +25,7 @@ class Database: DatabaseConfigurable {
     }
 
     var objectTypes: [Object.Type]? {
-        return [Movie.self]
+        return [Movie.self, Pagination.self, Suggestion.self]
     }
 
     var embeddedObjectTypes: [EmbeddedObject.Type]? {

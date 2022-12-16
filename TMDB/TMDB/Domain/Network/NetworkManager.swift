@@ -36,12 +36,7 @@ class NetworkManager: NSObject {
     }
     
     // MARK: - Request for General Apis
-    func request(with url: inout String, endPoint: EndPointEnum, parameters: Params = [:], completion: @escaping CompletionNetwork) {
-        
-        // Append api key in needed
-        if endPoint.isAuthRequired {
-            url += AppConfiguration().apiKey
-        }
+    func request(with url: String, endPoint: EndPointEnum, parameters: Params = [:], completion: @escaping CompletionNetwork) {
         
         // Alamofire request
         self.alamofireManager.session.request(url, method: endPoint.httpMethod,
@@ -67,6 +62,12 @@ class NetworkManager: NSObject {
                     completion(.failure(.custom(string: "Data not found")))
                 }
             }
+        }
+    }
+    
+    func discardPreviousReequests() {
+        self.alamofireManager.session.session.getTasksWithCompletionHandler { dataTasks, _, _ in
+            dataTasks.forEach { $0.cancel() }
         }
     }
 }

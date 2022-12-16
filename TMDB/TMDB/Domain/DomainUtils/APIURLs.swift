@@ -20,11 +20,10 @@ struct EndPoints {
     }
 }
 
-
-
 struct APIURLs {
     // Fetch Movies
     static let fetchMovies = EndPoints(with: "movie/popular").requestedURL
+    static let searchMovies = EndPoints(with: "search/movie").requestedURL
 }
 
 
