@@ -88,6 +88,14 @@ class ViewController: UIViewController {
         viewModel.fetchMovies()
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        guard previousTraitCollection != nil else { return }
+        collectionView?.collectionViewLayout.invalidateLayout()
+        collectionView.reloadData()
+    }
+    
     // MARK: - IBActions
     @objc func searchTapped() {
         print("Search Tapped")

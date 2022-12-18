@@ -55,6 +55,13 @@ class SearchViewController: UIViewController {
         viewModel.getSuggestions()
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        guard previousTraitCollection != nil else { return }
+        collectionView?.collectionViewLayout.invalidateLayout()
+    }
+    
     // MARK: - IBActions
     
     // MARK: - Custom Functions
