@@ -27,7 +27,7 @@ i have used MVVM Design pattern with RxSwift and swift generic approach to devel
 &nbsp; 
 
 <kbd >
-<img src="https://github.com/ihusnainalii/TMDB/blob/main/TMDB/Screenshots/Recording.mp4">
+<img src="https://github.com/ihusnainalii/TMDB/blob/main/TMDB/Screenshots/blob/main/Recording.mp4">
 </kbd>
 
 &nbsp; 
