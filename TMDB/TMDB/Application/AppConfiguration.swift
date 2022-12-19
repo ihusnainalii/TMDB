@@ -28,6 +28,13 @@ final class AppConfiguration {
         guard let imageBasePath = Bundle.main.object(forInfoDictionaryKey: "ImageBasePath") as? String else {
             fatalError("ImageBasePath must not be empty in plist")
         }
-        return imageBasePath
+        return imageBasePath + "w92"
+    }()
+    
+    lazy var backdropPath: String = {
+        guard let imageBasePath = Bundle.main.object(forInfoDictionaryKey: "ImageBasePath") as? String else {
+            fatalError("ImageBasePath must not be empty in plist")
+        }
+        return imageBasePath + "w500"
     }()
 }

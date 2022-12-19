@@ -17,7 +17,7 @@ class FavoriteMoviesViewModel: BaseViewModel {
     let movies = BehaviorRelay<[MovieCellViewModel]>(value: [])
     
     // MARK: - Initialiser
-    init(_ repository: MoviesRepository) {
+    init(_ repository: MoviesDependency) {
         self.repository = repository
     }
     

@@ -18,7 +18,7 @@ class MoviesViewModel: BaseViewModel {
     let pagination = BehaviorRelay<Pagination>(value: Pagination())
     
     // MARK: - Initialiser
-    init(_ repository: MoviesRepository) {
+    init(_ repository: MoviesDependency) {
         self.repository = repository
     }
     

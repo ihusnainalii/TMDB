@@ -194,6 +194,17 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
         }.disposed(by: disposeBag)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        if let view = self.storyboard?.instantiateViewController(withIdentifier: "DetailMovieViewController") as? DetailMovieViewController {
+            view.delegate = self
+            if let movie = self.viewModel.movies.value[indexPath.row].movie.value {
+                view.viewModel = MovieDetailViewModel(movie)
+            }
+            self.navigationController?.pushViewController(view, animated: true)
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.row == viewModel.movies.value.count - 1 {
             if let pageNumber = viewModel.pagination.value.page, let totalPages = viewModel.pagination.value.totalPages, pageNumber <= totalPages {

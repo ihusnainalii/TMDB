@@ -18,9 +18,9 @@ extension UIImageView {
         }, completion: nil)
     }
     
-    func setImage(_ url: String) {
+    func setImage(_ url: String, isHighRes: Bool = false) {
         self.kf.indicatorType = .activity
-        let pathString = AppConfiguration().imageBasePath + url
+        let pathString = (isHighRes ? AppConfiguration().backdropPath : AppConfiguration().imageBasePath) + url
         self.kf.setImage(with: URL(string: pathString), placeholder: Utilities.Assets.Placeholderimg)
     }
     

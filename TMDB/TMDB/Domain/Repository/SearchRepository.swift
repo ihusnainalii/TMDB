@@ -52,7 +52,6 @@ class SearchRepository: SearchDependency {
                                 let response = try JSONDecoder().decode(TMDBResponse.self, from: rawData)
                                 let pagination = response.getPagination()
                                 let movies = response.results
-                                self.saveSuggestion(query)
                                 completion(.success((movies, pagination)))
                             } catch {
                                 completion(.failure(.parser(string: "Error While parsing")))
@@ -70,7 +69,7 @@ class SearchRepository: SearchDependency {
         }
     }
     
-    private func saveSuggestion(_ query: String?) {
+    func saveSuggestion(_ query: String?) {
         guard let queryString = query else {return}
         let stamp = Int(Date().timeIntervalSince1970)
         let primaryId = stamp
@@ -89,8 +88,12 @@ class SearchRepository: SearchDependency {
     }
     
     func getPreviousSeggestions(completion: @escaping GenericCompletion<Any>) {
-        let result = self.storage.queryAll(returningClass: Suggestion.self)
-        completion(.success(result?.list))
+        if let result = self.storage.queryAll(returningClass: Suggestion.self) {
+            let last10Reecords = result.lazy.prefix(10).base
+            completion(.success(last10Reecords.list))
+        } else {
+            completion(.failure(.db(string: "No data found")))
+        }
     }
 }
 

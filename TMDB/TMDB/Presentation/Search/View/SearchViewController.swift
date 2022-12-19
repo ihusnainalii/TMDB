@@ -125,10 +125,9 @@ extension SearchViewController: UISearchBarDelegate {
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        viewModel.searchMovies()
-        collectionView.isHidden = false
-        tableView.isHidden = true
         searchBar.resignFirstResponder()
+        viewModel.saveSuggestion()
+        viewModel.getSuggestions()
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -141,6 +140,7 @@ extension SearchViewController: UISearchBarDelegate {
         collectionView.isHidden = true
         searchBar.text = ""
         searchBar.resignFirstResponder()
+        viewModel.getSuggestions()
     }
 }
 

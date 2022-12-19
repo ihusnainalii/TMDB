@@ -15,6 +15,7 @@ import Foundation
 public enum RealmErrorType: Error {
     // When you can’t initialize the Realm instance. You will get this error.
     case realmIsEmpty
+    
     // When you do something about configuration. If Realm can’t be configured. You will get this error.
     case configurationFailure
     case transactionFailed

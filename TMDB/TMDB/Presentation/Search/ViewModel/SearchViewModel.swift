@@ -42,6 +42,10 @@ class SearchViewModel: BaseViewModel {
         }
     }
     
+    func saveSuggestion() {
+        repository?.saveSuggestion(query.value)
+    }
+    
     func getSuggestions() {
         repository?.getPreviousSeggestions { result in
             // Response handling
@@ -58,7 +62,7 @@ class SearchViewModel: BaseViewModel {
         }
     }
     
-    func getCellViewModel(with movies: List<Movie>) -> [MovieCellViewModel] {
+    private func getCellViewModel(with movies: List<Movie>) -> [MovieCellViewModel] {
         var movieCellVMList: [MovieCellViewModel] = []
         for movie in movies {
             movieCellVMList.append(MovieCellViewModel(movie))
@@ -66,7 +70,7 @@ class SearchViewModel: BaseViewModel {
         return movieCellVMList
     }
     
-    func getSuggestionCell(with suggestions: List<Suggestion>) -> [SearchListViewModel] {
+    private func getSuggestionCell(with suggestions: List<Suggestion>) -> [SearchListViewModel] {
         var searchListViewModel: [SearchListViewModel] = []
         for suggestion in suggestions {
             searchListViewModel.append(SearchListViewModel(suggestion))
