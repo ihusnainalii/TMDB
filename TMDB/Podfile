@@ -26,7 +26,7 @@ target 'TMDB' do
   pod 'Kingfisher'
   
   # Pod for local DB
-    # pod 'RealmSwift'
+  pod 'RealmSwift'
 
   target 'TMDBTests' do
     inherit! :search_paths
